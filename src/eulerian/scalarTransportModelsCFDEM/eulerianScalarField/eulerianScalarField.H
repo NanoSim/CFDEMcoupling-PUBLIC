@@ -66,6 +66,8 @@ protected:
         scalar                  rhoCarrier_;              // the density of the carrier field
         scalar                  cp_;                      // the heat capacity of this field
         scalar                  cpCarrier_;               // the heat capacity of the carrier field
+        scalar                  normalizeFieldID_;      // scalar to trigger normalization (will not update)
+        scalar                  normalizeValue_;        // scalar used for normalization
 
         mutable volScalarField  m_;                       // transported quantity
 
@@ -139,6 +141,8 @@ public:
     void pullCloudFields() const ;
 
     void update(surfaceScalarField, volScalarField, volScalarField, scalar Sc, bool limitDiffusion=false) const ;
+    int  normalizeFieldID() const {return normalizeFieldID_;};
+    void normalize(volScalarField& ) const ;
 
     void bound(autoPtr<eulerianScalarField>*) const {};
 

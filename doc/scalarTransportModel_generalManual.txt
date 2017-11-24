@@ -26,7 +26,10 @@ generalManualProps
     (
         {C}
         {T}
-    ); :pre
+    ); 
+    {C}_normalizeFieldID {fieldID};   
+    {C}_normalizeValue   {factor};     
+:pre
 \} :pre
 
 {phiName} = (optional) name of the surface field for the SUPERFICIAL flux, default "phi". :ulb,l
@@ -36,8 +39,11 @@ generalManualProps
 {scalar3} = (optional, alternatively define word1) volumetric heat capacity as a global constant (in contrast to cpVolumetricFieldName for a field). This is the mixture density times the heat capacity [J/K/(m_voidspace)^3], will only be used if cpVolumetricFieldName, or updateMixtureProperties = false :l
 {word1} = (optional, alternatively define scalar3) volumetric heat capacity as a field :l
 {word3} = mixture density field :l
-{C} = concentration field name :l
+{C} = concentration field name. Can be multiple, just use a new line for each :l
 {T} = temperature field name :l
+{C}_normalizeFieldID = optional line to trigger algebraic calculation of a field based on another
+{fieldID} = id of the field (as per the list 'eulerianFields') that is used for the algebraic calculation
+{factor} after {C}_normalizeValue = optional factor for the algebraic calculation
 :ule
 
 [Examples:]
@@ -67,6 +73,8 @@ generalManualProps
 [Description:]
 
 Solves the advection-dispersion transport equation for a dilute scalar quantity in the fluid phase. fvOptions can be specified to model sources, etc. in the fluid phase. Exchange models with a particle phase can be included by including appropriate forceModels in couplingProperties.
+
+The user can decide to NOT solve the transport equation for a certain species but simply copy and scale from another field by using the {C}_normalizeFieldID and {C}_normalizeValue keywords. 
 
 [Restrictions:]
 The user MUST ensure the "phi" field is SUPERFICIAL (i.e., the fluid-phase velocity times voidfraction interpolatedat the cells' faces). The code cannot know or check whether this is the case, so the user of a certain solver has to ensure this. 

@@ -176,6 +176,14 @@ void generalManual::evolveFields()
             else 
                 eulerianScalarF(i).update(phi, voidfraction, particleCloud_.turbulence().nuEff(), ScT_);
     }
+
+    //Do "copy and normalizations" if necessary
+    for (int i=0;i<eulerianFieldList_.size();i++)
+    {   
+        int normalizeFieldID = eulerianScalarF(i).normalizeFieldID();
+        if(normalizeFieldID>-1)
+            eulerianScalarF(i).normalize( eulerianScalarF( normalizeFieldID ).m() );
+    }
 }
 
 // ************************************************************

@@ -96,27 +96,45 @@ scalarGeneralExchangeProps
     //MUST correspond to property/atom in ligghts (use 'couple/cfd/speciesConvection' to auto-generate individual fields)
     partSpeciesNames
     (
+        none
+        none
+        none
         supersat
     );
     partSpeciesFluxNames
     (
+        none
+        none
+        none
         none //supersatFlux
     );
     partSpeciesTransCoeffNames
     (
+        none
+        none
+        none
         supersatTransCoeff
     );
     partSpeciesFluidNames
     (
-       supersatFluid
+        none
+        none
+        none
+        supersatFluid
     );
     DMolecular
     (
+        1e-16
+        1e-16
+        1e-16
         1e-5
     );
     //parameters for the vapor pressure model
     parameterVap
     (
+        0
+        0
+        0
         0
     );
 

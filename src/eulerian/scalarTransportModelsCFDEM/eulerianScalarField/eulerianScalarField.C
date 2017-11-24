@@ -56,6 +56,8 @@ eulerianScalarField::eulerianScalarField
     rhoCarrier_(dict_.lookupOrDefault<scalar>("rhoCarrier", -1)),
     cp_(dict_.lookupOrDefault<scalar>("cp"+fieldName_, -1)),
     cpCarrier_(dict_.lookupOrDefault<scalar>("cpCarrier", -1)),
+    normalizeFieldID_(dict_.lookupOrDefault<scalar>(fieldName_+"_normalizeFieldID", -1)),
+    normalizeValue_(dict_.lookupOrDefault<scalar>(fieldName_+"_normalizeValue", -1)),
     m_
     (   IOobject
         (
@@ -198,8 +200,17 @@ void eulerianScalarField::pullCloudFields() const
 }
 
 // ************************************************************
+void eulerianScalarField::normalize(volScalarField& mToSetFrom) const 
+{
+    m_ = mToSetFrom * normalizeValue_;
+}
+
+// ************************************************************
 void eulerianScalarField::update(surfaceScalarField phi, volScalarField voidfraction, volScalarField nuEff, scalar Sc, bool limitDiffusion) const 
 {
+    if(normalizeFieldID_>-1)
+        return;
+
     scalar oneByCpVolumetric = 1./(cpVolumetric_+SMALL);
     //Normalize source in case we have a temperature field
     if(fieldType_=="temperature")

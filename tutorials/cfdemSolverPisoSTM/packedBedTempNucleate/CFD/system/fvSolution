@@ -75,7 +75,7 @@ solvers
         relTol          0;
     }
 
-    "(T|SuperSatField)"
+    "(T|eductA|eductB|product|SuperSatField)"
     {
         solver          PBiCG;
         preconditioner  DILU;
