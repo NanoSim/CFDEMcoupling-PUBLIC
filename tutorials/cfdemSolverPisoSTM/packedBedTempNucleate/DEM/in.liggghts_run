@@ -57,11 +57,12 @@ fix         cfd2 all couple/cfd/force
 # heat transfer from the fluid
 fix         ftco all property/global thermalConductivity peratomtype 5. # lambda in [W/(K*m)]
 fix         ftca all property/global thermalCapacity peratomtype 0.1    # cp in [J/(kg*K)]
-fix         cfd3 all couple/cfd/convection T0 600 registerTransferCoeffAndFluid #this will register 'Temp', as well as transfer coeffs and fluid quantities. Warning: these quantities always have the name 'heat'
+fix         heatCond all heat/gran initial_temperature 666 #required in case of convectiveImpl, since this will register 'Temp
+fix         cfd3 all couple/cfd/convectiveImpl integrateHeatEqn false #will register transfer coeffs and fluid quantities. Warning: these quantities always have the name 'heat'
 
 # species transfer
 fix         specCap all property/global              speciesCCapacity peratomtype 1.0
-fix         speciesConv1    all couple/cfd/speciesConvection speciesName supersat species0 1.01 #this fix will add ALL relevant exchange fields for the species, including transfer coefficients (name '*TransCoeff) and fluid quantities (name '*Fluid')
+fix         speciesConv1 all couple/cfd/speciesConvection speciesName supersat species0 1.01 #this fix will add ALL relevant exchange fields for the species, including transfer coefficients (name '*TransCoeff) and fluid quantities (name '*Fluid')
 
 #calculate grow rate: Do a dynamic growth based on an external fix
 fix         saturationdensity all property/atom saturationdensity scalar no yes no none #this needs to be set manually!
