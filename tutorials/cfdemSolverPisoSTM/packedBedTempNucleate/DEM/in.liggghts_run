@@ -1,0 +1,94 @@
+echo            both
+log             ../DEM/log.liggghts
+thermo_log      ../DEM/post/thermo.txt
+
+#######################################################
+# variables                                           #
+#######################################################
+variable r0 equal 0.011
+#######################################################
+
+# read packed bed and calc convective heat transfer
+atom_style      granular
+atom_modify     map array
+boundary        m m m
+newton          off
+
+communicate     single vel yes
+
+units           si
+processors      1 1 2
+
+# read the restart file
+read_restart    ../DEM/post/restart/liggghts.restart
+
+neighbor        ${r0} bin
+neigh_modify    delay 0 binsize 0.01
+
+
+# Material properties required for granular pair styles
+
+fix         m1 all property/global youngsModulus peratomtype 5.e6
+fix         m2 all property/global poissonsRatio peratomtype 0.45
+fix         m3 all property/global coefficientRestitution peratomtypepair 1 0.3
+fix         m4 all property/global coefficientFriction peratomtypepair 1 0.5
+
+# pair style
+pair_style  gran model hertz tangential history
+pair_coeff  * *
+
+# timestep, gravity
+timestep    0.00001
+fix         gravi all gravity 9.81 vector 0. 0. -1.
+
+# walls
+fix     xwalls1 all wall/gran model hertz tangential history primitive type 1 xplane 0.0
+fix     xwalls2 all wall/gran model hertz tangential history primitive type 1 xplane 0.1
+fix     ywalls1 all wall/gran model hertz tangential history primitive type 1 yplane 0.0
+fix     ywalls2 all wall/gran model hertz tangential history primitive type 1 yplane 0.1
+fix     zwalls1 all wall/gran model hertz tangential history primitive type 1 zplane 0.0
+fix     zwalls2 all wall/gran model hertz tangential history primitive type 1 zplane 1.1
+
+# cfd coupling
+fix         cfd all couple/cfd couple_every 100 mpi
+fix         cfd2 all couple/cfd/force
+
+
+# heat transfer from the fluid
+fix         ftco all property/global thermalConductivity peratomtype 5. # lambda in [W/(K*m)]
+fix         ftca all property/global thermalCapacity peratomtype 0.1    # cp in [J/(kg*K)]
+fix         cfd3 all couple/cfd/convection T0 600 registerTransferCoeffAndFluid #this will register 'Temp', as well as transfer coeffs and fluid quantities. Warning: these quantities always have the name 'heat'
+
+# species transfer
+fix         specCap all property/global              speciesCCapacity peratomtype 1.0
+fix         speciesConv1    all couple/cfd/speciesConvection speciesName supersat species0 1.01 #this fix will add ALL relevant exchange fields for the species, including transfer coefficients (name '*TransCoeff) and fluid quantities (name '*Fluid')
+
+#calculate grow rate: Do a dynamic growth based on an external fix
+fix         saturationdensity all property/atom saturationdensity scalar no yes no none #this needs to be set manually!
+fix         supersaturationCrit all property/global supersaturationCrit scalar 1.2
+fix         diffusionCoeff all property/global diffusionCoeff scalar 1e-4
+fix         surfaceTension all property/global surfaceTension scalar 0.7
+#set the inactive radius below which particles will be considered pseudo particles. WARNING: MUST be SMALLER than critical radius of particles (radius of the nuclei!)
+variable	radiusInactive equal  5.0e-3 #note: variables are NON-group-specific!
+variable    particleDensity equal 2500
+run 0
+fix		    grow all growth 100 atom diameter v_dgrown growToValue DYNAMIC variableNames supersatFluid heatFluid saturationdensity supersatTransCoeff
+
+# set particle temperature for the bed
+run         0
+region      total block INF INF INF INF INF INF units box
+set         region total property/atom Temp 600.
+
+# apply nve integration to all particles that are inserted as single particles
+fix         integr all nve/sphere
+
+# output settings, include total thermal energy
+compute         rke all erotate/sphere
+thermo_style    custom step atoms ke c_rke vol
+thermo          1000
+thermo_modify   lost ignore norm no
+compute_modify  thermo_temp dynamic yes
+
+dump        dmp all custom 500 ../DEM/post/dump*.liggghts_run id type x y z ix iy iz vx vy vz fx fy fz omegax omegay omegaz radius f_Temp[0] f_heatFlux[0] f_adaptProp_fixGrowth_grow f_heatFluid f_heatTransCoeff f_supersat f_supersatFlux f_supersatFluid
+
+run         0
