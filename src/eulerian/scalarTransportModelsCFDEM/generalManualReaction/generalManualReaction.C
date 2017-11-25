@@ -130,7 +130,7 @@ void generalManualReaction::calculateReactionRate()
 {
     if(!haveReaction_)  return;
 
-    //Re-set the sources due to particle-fluid interactions
+    //Calculate the reaction rate (this is per CONTINUOUS unit volume, NOT per TOTAL unit volume since reaction is only in CONTINUOUS phase)
     //This uses a simple Pi-Product formulation
     mReactionRate_ = reactionRateConstant_ 
                    * Foam::pow(eulerianScalarF(reactantsIndex_[0]).m(), reactantsExponents_[0]);
@@ -146,10 +146,13 @@ void generalManualReaction::modifySourceTerms()
 {
     if(!haveReaction_)  return;
 
-    //Re-set the sources due to particle-fluid interactions
+    //Set the sources due to particle-fluid interactions
+    //This MUST be per TOTAL unit volume, so we need to multiply with the voidage)
+    const volScalarField&     voidfraction(particleCloud_.mesh().lookupObject<volScalarField> (voidfractionFieldName_));
     for (int i=0;i<reactantsList_.size();i++) 
     {
-        eulerianScalarF(reactantsIndex_[i]).mSource() += reactantsStoichiometricFactors_[i] * mReactionRate_;
+        eulerianScalarF(reactantsIndex_[i]).mSource() += voidfraction 
+                                                       * reactantsStoichiometricFactors_[i] * mReactionRate_;
     }
 }
 

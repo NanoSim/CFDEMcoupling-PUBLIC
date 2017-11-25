@@ -65,7 +65,6 @@ protected:
     bool                            updateMixtureProperties_;   // switch to indicate whether phase properties will be updated or not
     volScalarField                  rhoMix_;                  //field (if needed) to hold mixture density
     volScalarField                  cpRho_;                  //field (if needed) to hold volumetric cp-value
-             
 
 
 public:
