@@ -6,6 +6,7 @@ temperatureModel/temperatureModel.C
 generalManual/generalManual.C
 noTransport/noTransport.C
 generalPhaseChange/generalPhaseChange.C
+generalManualReaction/generalManualReaction.C
 
 /*Fields*/
 eulerianScalarField/eulerianScalarField.C

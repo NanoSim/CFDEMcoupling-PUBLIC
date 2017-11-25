@@ -89,7 +89,7 @@ eulerianScalarField::eulerianScalarField
             IOobject::NO_READ,
             IOobject::AUTO_WRITE
         ),
-        0.0*mSource_ /( m_ + dimensionedScalar("dummy", m_.dimensions(), 1e-32) ) //initi with zero
+        0.0*mSource_ /( m_ + dimensionedScalar("dummy", m_.dimensions(), 1e-32) ) //init with zero
     ),
     fieldType_("undefined")
     #ifndef versionExt32

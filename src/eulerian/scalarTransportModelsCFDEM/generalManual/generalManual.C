@@ -117,7 +117,7 @@ void generalManual::createFields()
 // ************************************************************
 void generalManual::setSources()
 {
-    //Loop through all Eulerian fields and and set fields
+    //Loop through all Eulerian fields and and set source fields
     for (int i=0;i<eulerianFieldList_.size();i++)
             eulerianScalarF(i).pullCloudFields();
 
