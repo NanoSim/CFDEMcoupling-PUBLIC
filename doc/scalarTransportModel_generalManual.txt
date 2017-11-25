@@ -6,12 +6,14 @@
 :line
 
 scalarTransportModel_generalManual command :h3
+scalarTransportModel_generalManualReaction command :h3
 
 [Syntax:]
 
 Defined in scalarTransportProperties dictionary.
 
 scalarTransportModel generalManual;
+scalarTransportModel generalManualReaction;
 
 generalManualProps
 \{
@@ -29,6 +31,26 @@ generalManualProps
     ); 
     {C}_normalizeFieldID {fieldID};   
     {C}_normalizeValue   {factor};     
+
+    //Optional settings for generalManualReaction
+    ReactionParameters    
+    {
+        reactionRateFieldName   {fieldName}; //this is optional: the name of the reaction rate
+        reactionRateConstant    {dimensionedRateConstant};
+        reactants
+        (
+            {reactant....}
+        );
+        exponents
+        (
+             {exponentReactant...}
+        ); 
+        stoichiometricFactors
+        (
+             {stoichiometricFactorReactant...}
+        );
+    }
+
 :pre
 \} :pre
 
@@ -44,6 +66,12 @@ generalManualProps
 {C}_normalizeFieldID = optional line to trigger algebraic calculation of a field based on another
 {fieldID} = id of the field (as per the list 'eulerianFields') that is used for the algebraic calculation
 {factor} after {C}_normalizeValue = optional factor for the algebraic calculation
+
+{fieldName} = the name of the reaction rate field that is saved to disk (optional)
+{dimensionedRateConstant} = reaction rate constant. must ALWAYS have inverse time units, since concentration is dimensionless
+{reactant....} = list of names of the reactants. Make list empty to switch off reaction calculations
+{exponentReactant...} = list of exponents for each reactant concentration. Must have same length as {reactant....} 
+{stoichiometricFactorReactant...} = list of stoichiometric factors for each reactant. Must have same length as {reactant....} 
 :ule
 
 [Examples:]
@@ -60,6 +88,24 @@ generalManualProps
         C
         T
     ); :pre
+
+    ReactionParameters    
+    {
+        reactionRateFieldName   "myReactionRate";
+        reactionRateConstant    dimval [ 0 0 -1 0 0 0 0 ]  1.2345; 
+        reactants //this is a simple decomposition of C
+        (
+            C
+        );
+        exponents
+        (
+             1
+        ); 
+        stoichiometricFactors
+        (
+            -1
+        );
+    }
 
     fvOptionsC
     \{
