@@ -132,7 +132,7 @@ void StressSubClosure::createASigma(word closureName)
 {
   aSigmaPtr_.set
   (
-    new volVectorField
+    new volSymmTensorField
     (
         IOobject
         (
@@ -143,9 +143,9 @@ void StressSubClosure::createASigma(word closureName)
             IOobject::NO_WRITE
         ),
         phase_.U().mesh(),
-        dimensionedVector("0",
-                                 dimensionSet(0,2,-2,0,0,0,0),
-                               vector::zero
+        dimensionedSymmTensor("R",
+                                   dimensionSet(0,2,-2,0,0,0,0),
+                                   symmTensor::zero
                              )
     )
 
@@ -188,15 +188,15 @@ volScalarField&  StressSubClosure::lambdaPrime()
     return lambdaPrimePtr_();
 }
 
-const volVectorField&  StressSubClosure::aSigma() const
+const volSymmTensorField&  StressSubClosure::aSigma() const
 {
     checkAutoPtr("Anisotropic Component",aSigmaPtr_.empty());
     return aSigmaPtr_();
 }
 
-volVectorField&  StressSubClosure::aSigma()
+volSymmTensorField&  StressSubClosure::aSigma()
 {
-     checkAutoPtr("Anisotropic Component",aSigmaPtr_.empty());
+    checkAutoPtr("Anisotropic Component",aSigmaPtr_.empty());
     return aSigmaPtr_();
 }
 
@@ -275,7 +275,7 @@ StressSubClosure::R(volVectorField& U) const
     //Add anisotropic component if available
     if(aSigmaPtr_.valid())
     {
-     Rt +=  symm(aSigma()*vector::one);
+     Rt +=  aSigma();
     }
 
     return tmpRt;
@@ -365,7 +365,7 @@ void StressSubClosure::updateLambda(volScalarField& lambda) const
      lambda += lambdaPrime();
 }
 
-void StressSubClosure::updateASigma(volVectorField& ASigma) const
+void StressSubClosure::updateASigma(volSymmTensorField& ASigma) const
 {
     if(aSigmaPtr_.valid())
      ASigma += aSigma();

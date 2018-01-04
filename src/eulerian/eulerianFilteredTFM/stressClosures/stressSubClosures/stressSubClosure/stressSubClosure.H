@@ -58,7 +58,7 @@ namespace Foam
    autoPtr<volScalarField>    lambdaPrimePtr_;
 
    //-Anisotropic contribution to R (diagonal elements only)
-   autoPtr<volVectorField>     aSigmaPtr_;
+   autoPtr<volSymmTensorField>     aSigmaPtr_;
 
    //-Threshold below which the quantity is lineary smoothed to 0.
    scalar    phaseThreshold_;
@@ -84,11 +84,11 @@ namespace Foam
    volScalarField&  lambdaPrime();
 
 
-   //- Return the bulk viscosity
-   const volVectorField&  aSigma() const;
+   //- Return an (additional) anisotropic stress tensor
+   const volSymmTensorField&  aSigma() const;
 
-   //- Return the bulk viscosity (non-const)
-   volVectorField&  aSigma();
+   //- Return an (additional) anisotropic stress tensor (non-const)
+   volSymmTensorField&  aSigma();
 
    //-Return the phase-pressure
    const volScalarField& pPrime() const;
@@ -171,9 +171,9 @@ namespace Foam
     //Update total quantities in stressClosure
     void updateNu(volScalarField& nu) const;
     void updateP(volScalarField& p) const;
-    void updatePf(surfaceScalarField& pf) const;
+    void updatePf(surfaceScalarField& pf) const;    //pressure at face
     void updateLambda(volScalarField& lambda) const;
-    void updateASigma(volVectorField& ASigma) const;
+    void updateASigma(volSymmTensorField& ASigma) const;
 
 
     //Correct sub closure
