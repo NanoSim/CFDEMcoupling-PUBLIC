@@ -1,4 +1,6 @@
-#if(CFDEMWMPROJECTVERSION == 40)
+#if(CFDEMWMPROJECTVERSION == 50)
+    #define version50
+#elif(CFDEMWMPROJECTVERSION == 40)
     #define version40
 #elif(CFDEMWMPROJECTVERSION == 24)
     #define version24
@@ -10,6 +12,8 @@
     #define versionv1606plus
 #elif(CFDEMWMPROJECTVERSION == 1612)
     #define versionv1612plus
+#elif(CFDEMWMPROJECTVERSION == 1706)
+    #define versionv1706
 #endif
 
 //define anisotropicRotation cloud models
@@ -20,9 +24,19 @@
     #define version16ext
 #endif
 
+// features of 4.0 work also in 5.0
+#if defined(version50)
+    #define version40
+#endif
+
 // features of 3.0 work also in 4.0
 #if defined(version40)
     #define version30
+#endif
+
+// features of v1706 work also in v1612+
+#if defined(versionv1706)
+    #define versionv1612plus
 #endif
 
 #if defined(versionv1612plus)
@@ -39,7 +53,7 @@
     #define version30
 #endif
 
-// features of 2.4Dev work also in Dev
+// features of 2.4Dev work also in 3.0
 #if defined(version30)
     #define version24Dev
 #endif

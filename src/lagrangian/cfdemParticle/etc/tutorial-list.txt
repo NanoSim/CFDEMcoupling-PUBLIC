@@ -5,25 +5,14 @@
 # cfdemTestTUT
 # Christoph Goniva - June. 2011, DCS Computing GmbH
 #===================================================================#
-
-cfdemSolverPiso/settlingTestMPI/dir
-
-cfdemSolverPiso/ErgunTestMPI/dir
-
-cfdemSolverPiso/ErgunTestMPI_cgs/dir
-
-cfdemSolverPiso/ErgunTestMPI_restart/dir
-
-cfdemSolverPiso/periodicChannel/dir
-
-cfdemSolverPiso/voidfractionTest/dir
-
-cfdemSolverIB/twoSpheresGlowinskiMPI/dir
-
-cfdemSolverPisoScalar/packedBedTemp/dir
-
-cfdemSolverPisoSTM/packedBedTemp/dir
-
 cfdemPostproc/fillCylinder/dir
-
+cfdemSolverPiso/settlingTestMPI/dir
+cfdemSolverPiso/ErgunTestMPI/dir
+cfdemSolverPiso/ErgunTestMPI_cgs/dir
+cfdemSolverPiso/ErgunTestMPI_restart/dir
+cfdemSolverPiso/periodicChannel/dir
+cfdemSolverPiso/voidfractionTest/dir
+cfdemSolverIB/twoSpheresGlowinskiMPI/dir
+cfdemSolverPisoScalar/packedBedTemp/dir
+cfdemSolverPisoSTM/packedBedTemp/dir
 #ParScale/cfdemSolverPisoSTM/packedBedTempParScale/dir
